@@ -27,9 +27,10 @@ class HomePage extends Component {
               {
                 return (
                   <div className="item">
-                    {id}
-                    {content}
-                    <button>Bid</button>
+                    <hr/>
+                    <span>Make VW, Model Passat, Variant 2.0 TDI, Year 2015, Mileage 15000km, Engine 2000cm3, Gearbox Manual, Traction 4x4</span>
+                    <br/>
+                    <span>Current bid $9000</span>
                   </div>
                 );
               }

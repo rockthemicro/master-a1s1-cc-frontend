@@ -25,13 +25,10 @@ class MyNavBar extends Component {
     return (
       <div>
         <Navbar>
-          <Nav pullRight>
+          <Nav>
             <NavItem eventKey={1} href="/">Home</NavItem>
-            <NavItem eventKey={2} href="/login">Login</NavItem>
-            <NavItem onSelect={this.sugiaia}>bla</NavItem>
-            <NavItem>bla2</NavItem>
-            <NavItem>bla3</NavItem>
-            <NavItem>bla4</NavItem>
+            <NavItem eventKey={2} href="/login">Log In</NavItem>
+            <NavItem onSelect={this.sugiaia}>Sign Up</NavItem>
           </Nav>
         </Navbar>
       </div>
