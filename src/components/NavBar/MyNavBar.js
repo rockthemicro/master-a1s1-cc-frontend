@@ -1,10 +1,24 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import './MyNavBar.css';
+import {
+  withRouter
+} from "react-router-dom";
 
 class MyNavBar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.sugiaia = this.sugiaia.bind(this);
+  }
   sugiaia = () => {
-    alert("mama");
+    const location = {
+      pathname: '/login',
+      state: {
+        testProp: 'saluut'
+      }
+    }
+    this.props.history.push(location);
   }
 
   render() {
@@ -25,4 +39,4 @@ class MyNavBar extends Component {
   }
 }
 
-export default MyNavBar;
+export default withRouter(MyNavBar);
