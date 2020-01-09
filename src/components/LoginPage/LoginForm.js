@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Panel, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
 
+import {withRouter} from "react-router-dom";
 
 const divStyle = {
   display: 'flex',
@@ -22,11 +23,48 @@ const buttonStyle = {
 
 class LoginForm extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.getUsername = this.getUsername.bind(this);
+    this.getPassword = this.getPassword.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+    this.state = {
+      username: "",
+      password: ""
+    }
+  }
+
   handleFormSubmit(e) {
     e.preventDefault();
 
-    console.log("FORM SUBMIT!");
+    console.log("FORM SUBMIT!" + this.state.username + "   " + this.state.password);
 
+    const location = {
+      pathname: '/home',
+      state: {
+        username: this.state.username
+      }
+    };
+    this.props.history.push(location);
+
+  }
+
+  getUsername(e) {
+    e.preventDefault();
+
+    this.setState({
+      username: e.target.value
+    })
+  }
+
+  getPassword(e) {
+    e.preventDefault();
+
+    this.setState({
+      password: e.target.value
+    })
   }
 
   render() {
@@ -34,11 +72,13 @@ class LoginForm extends Component {
       <div style={divStyle}>
         <Panel style={panelStyle}>
           <Form horizontal className="LoginForm" id="loginForm">
-            <FormGroup controlId="formEmail">
-              <FormControl type="email" placeholder="Email Address" />
+            <FormGroup controlId="form">
+              <label>Username</label>
+              <FormControl type="text" placeholder="Username" onChange={this.getUsername}/>
             </FormGroup>
             <FormGroup controlId="formPassword">
-              <FormControl type="password" placeholder="Password" />
+              <label>Password</label>
+              <FormControl type="password" placeholder="Password" onChange={this.getPassword}/>
             </FormGroup>
             <FormGroup style={buttonStyle} controlId="formSubmit">
               <Button bsStyle="primary" type="submit" onClick={this.handleFormSubmit}>
@@ -52,4 +92,4 @@ class LoginForm extends Component {
   }
 }
 
-export default LoginForm;
+export default withRouter(LoginForm);

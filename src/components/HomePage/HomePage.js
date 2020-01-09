@@ -8,7 +8,7 @@ class HomePage extends Component {
     super(props);
     this.state = {
       items: []
-    }
+    };
 
     for (var i = 0; i < 200; i++) {
       this.state.items.push({id: i, content: i});

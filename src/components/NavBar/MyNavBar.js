@@ -8,17 +8,6 @@ import {
 class MyNavBar extends Component {
   constructor(props) {
     super(props);
-
-    this.sugiaia = this.sugiaia.bind(this);
-  }
-  sugiaia = () => {
-    const location = {
-      pathname: '/login',
-      state: {
-        testProp: 'saluut'
-      }
-    }
-    this.props.history.push(location);
   }
 
   render() {
@@ -26,9 +15,8 @@ class MyNavBar extends Component {
       <div>
         <Navbar>
           <Nav>
-            <NavItem eventKey={1} href="/">Home</NavItem>
-            <NavItem eventKey={2} href="/login">Log In</NavItem>
-            <NavItem onSelect={this.sugiaia}>Sign Up</NavItem>
+            <NavItem eventKey={1} href="/login">Log In</NavItem>
+            <NavItem eventKey={2} href="/signUp">Sign Up</NavItem>
           </Nav>
         </Navbar>
       </div>
