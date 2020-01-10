@@ -53,6 +53,25 @@ class UserHomePage extends Component {
         })
     };
 
+    openBids = () => {
+        const location = {
+            pathname: '/bids',
+            state: {
+                username: this.state.username
+            }
+        };
+        this.props.history.push(location);
+    };
+
+    openAuctions = () => {
+        const location = {
+            pathname: '/auctions',
+            state: {
+                username: this.state.username
+            }
+        };
+        this.props.history.push(location);
+    };
 
     render() {
         return (
@@ -60,9 +79,10 @@ class UserHomePage extends Component {
                 <div>
                     <Navbar>
                         <Nav>
+                            <NavItem eventKey={0}>HOME</NavItem>
                             <NavItem eventKey={1} href={"/"}>LOG OUT</NavItem>
-                            <NavItem eventKey={2}>MY BIDS</NavItem>
-                            <NavItem eventKey={3}>MY AUCTIONS</NavItem>
+                            <NavItem eventKey={2} onClick={this.openBids}>MY BIDS</NavItem>
+                            <NavItem eventKey={3} onClick={this.openAuctions}>MY AUCTIONS</NavItem>
                         </Nav>
                     </Navbar>
                 </div>
