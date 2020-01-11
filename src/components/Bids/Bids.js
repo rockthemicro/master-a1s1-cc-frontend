@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 
 import {withRouter} from "react-router-dom";
 import {Nav, Navbar, NavItem} from "react-bootstrap";
+import {AUCTION_URL} from "../../Common";
+import axios from "axios";
 
 class Bids extends Component {
 
@@ -13,9 +15,6 @@ class Bids extends Component {
             items: []
         };
 
-        for (var i = 0; i < 200; i++) {
-            this.state.items.push({id: i, content: i});
-        }
     }
 
     openAuctions = () => {
@@ -38,6 +37,22 @@ class Bids extends Component {
         this.props.history.push(location);
     };
 
+    componentDidMount() {
+        let url = AUCTION_URL + "getUserBidAuctions?userName=" + this.state.username;
+
+        axios.get(url)
+            .then((response) => {
+                debugger
+                this.setState({
+                    items: response.data
+                })
+            })
+            .catch(() => {
+                debugger
+                alert('Could not retrieve auctions you bid on')
+            })
+    }
+
     render() {
         return (
             <div className="HomePage">
@@ -51,17 +66,21 @@ class Bids extends Component {
                         </Nav>
                     </Navbar>
                 </div>
-                <h1>Hello, {this.state.username} ! this is bid page</h1>
+                <h1>Hello, {this.state.username} ! These are your bids</h1>
                 <div className="scroller">
                     {
                         this.state.items.map(
-                            ({id, content}) => {
+                            ({ id, make, model, variant, year, mileage, engine, gearbox, traction, currentBid, status }) =>
+                            {
                                 return (
                                     <div className="item">
                                         <hr/>
-                                        <span>Make VW, Model Passat, Variant 2.0 TDI, Year 2015, Mileage 15000km, Engine 2000cm3, Gearbox Manual, Traction 4x4</span>
+                                        <span>Make {make}, Model {model}, Variant {variant}, Year {year}, Mileage {mileage}km, </span>
+                                        <span>Engine {engine}cm3, Gearbox {gearbox}, Traction {traction}</span>
                                         <br/>
-                                        <span>Current bid $9000</span>
+                                        <span>Current bid ${currentBid}</span>
+                                        <br/>
+                                        <span>Status {status}</span>
                                     </div>
                                 );
                             }

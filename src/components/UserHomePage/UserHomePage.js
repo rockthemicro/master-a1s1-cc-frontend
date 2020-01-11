@@ -4,15 +4,19 @@ import {withRouter} from "react-router-dom";
 import {Nav, Navbar, NavItem, FormControl} from "react-bootstrap";
 
 import './UserHomePage.css';
+import {AUCTION_URL} from "../../Common";
+import axios from "axios";
 
-const Modal = ({handleClose, show, children}) => {
+const Modal = ({handleSubmit, handleClose, show, children}) => {
     const showHideClassName = show ? "modal display-block" : "modal display-none";
 
     return (
         <div className={showHideClassName}>
             <section className="modal-main">
                 {children}
-                <button onClick={handleClose}>Submit</button>
+                <button onClick={handleClose}>Close</button>
+                <span> </span>
+                <button onClick={handleSubmit}>Submit</button>
             </section>
         </div>
     );
@@ -26,24 +30,42 @@ class UserHomePage extends Component {
 
         this.showModal = this.showModal.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleClose = this.handleClose.bind(this);
 
         this.state = {
             username: this.props.location.state.username,
             show: false,
-            sum: 0
+            sum: 0,
+            auctionItemId: 0,
+            items: []
         }
     }
 
 
-    showModal = () => {
-        this.setState({show: true});
+    showModal = (e) => {
+        this.setState({show: true, auctionItemId: e.target.id});
     };
 
     handleSubmit = () => {
         //AICI TB FACUT CALL-ul dupa ce dam submit :D suma este pe state
+        var url = AUCTION_URL + "placeBid?userName=" + this.state.username + "&auctionItemId="
+                + this.state.auctionItemId + "&bid=" + this.state.sum;
 
+        axios.get(url)
+            .then((response) => {
+                if (response.data !== "OK") {
+                    alert('Place bid failed with error ' + response.data);
+                }
+            })
+            .catch(() => {
+                alert('Could not place bid')
+            })
         this.setState({show: false});
     };
+
+    handleClose = () => {
+        this.setState({show: false});
+    }
 
     handleInputChange = (e) => {
         e.preventDefault();
@@ -73,6 +95,20 @@ class UserHomePage extends Component {
         this.props.history.push(location);
     };
 
+    componentDidMount() {
+        var url = AUCTION_URL + "getAuctions";
+
+        axios.get(url)
+            .then((response) => {
+                this.setState({
+                    items: response.data
+                })
+            })
+            .catch(() => {
+                alert('Could not retrieve auctions')
+            })
+    }
+
     render() {
         return (
             <div>
@@ -88,40 +124,28 @@ class UserHomePage extends Component {
                 </div>
                 <h1>Welcome, {this.state.username}! Below you can find all of our auctions</h1>
                 <div>
-                    <div>
-                        <hr/>
-                        <span>Make VW, Model Passat, Variant 2.0 TDI, Year 2015, Mileage 15000km, Engine 2000cm3, Gearbox Manual, Traction 4x4</span>
-                        <br/>
-                        <div className="bid">
-                            <span>Current bid $9000</span>
-                            <button onClick={this.showModal}>BID</button>
-                        </div>
-                    </div>
-
-
-                    <div>
-                        <hr/>
-                        <span>Make VW, Model Passat, Variant 2.0 TDI, Year 2015, Mileage 15000km, Engine 2000cm3, Gearbox Manual, Traction 4x4</span>
-                        <br/>
-                        <div className="bid">
-                            <span>Current bid $9000</span>
-                            <button onClick={this.showModal}>BID</button>
-                        </div>
-                    </div>
-
-                    <div>
-                        <hr/>
-                        <span>Make VW, Model Passat, Variant 2.0 TDI, Year 2015, Mileage 15000km, Engine 2000cm3, Gearbox Manual, Traction 4x4</span>
-                        <br/>
-                        <div className="bid">
-                            <span>Current bid $9000</span>
-                            <button onClick={this.showModal}>BID</button>
-                        </div>
-                    </div>
-
+                    {
+                        this.state.items.map(
+                            ({ id, make, model, variant, year, mileage, engine, gearbox, traction, currentBid }) =>
+                            {
+                                return (
+                                    <div className="item">
+                                        <hr/>
+                                        <span>Make {make}, Model {model}, Variant {variant}, Year {year}, Mileage {mileage}km, </span>
+                                        <span>Engine {engine}cm3, Gearbox {gearbox}, Traction {traction}</span>
+                                        <br/>
+                                        <div className="bid">
+                                            <span>Current bid ${currentBid}</span>
+                                            <button id={id} onClick={this.showModal}>BID</button>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                        )
+                    }
                 </div>
 
-                <Modal show={this.state.show} handleClose={this.handleSubmit}>
+                <Modal show={this.state.show} handleClose={this.handleClose} handleSubmit={this.handleSubmit}>
                     <p>Please insert your sum</p>
 
                     <FormControl

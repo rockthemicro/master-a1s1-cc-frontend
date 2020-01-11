@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Panel, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
+import axios from 'axios';
 
 import {withRouter} from "react-router-dom";
+import {USER_URL} from "../../Common";
 
 const divStyle = {
   display: 'flex',
@@ -39,16 +41,28 @@ class LoginForm extends Component {
   handleFormSubmit(e) {
     e.preventDefault();
 
-    console.log("FORM SUBMIT!" + this.state.username + "   " + this.state.password);
+    console.log("FORM SUBMIT! " + this.state.username + "   " + this.state.password);
 
-    const location = {
-      pathname: '/home',
-      state: {
-        username: this.state.username
-      }
-    };
-    this.props.history.push(location);
+    var url = USER_URL + "/login?userName=" + this.state.username + "&password=" + this.state.password;
+    axios.get(url)
+        .then((response) => {
+          if (response.data === "OK") {
 
+            const location = {
+              pathname: '/home',
+              state: {
+                username: this.state.username
+              }
+            };
+            this.props.history.push(location);
+
+          } else {
+            alert('Invalid username and/or password')
+          }
+        })
+        .catch(() => {
+          alert('Could not send request')
+        })
   }
 
   getUsername(e) {

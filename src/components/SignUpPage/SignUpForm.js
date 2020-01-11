@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Panel, Form, FormGroup, FormControl, Button } from 'react-bootstrap';
 
 import {withRouter} from "react-router-dom";
+import {USER_URL} from "../../Common";
+import axios from "axios";
 
 const divStyle = {
     display: 'flex',
@@ -42,7 +44,27 @@ class SignUpForm extends Component {
 
         console.log(this.state.email + " " + this.state.username + " " + this.state.password);
 
-        this.props.history.push("/");
+        var url = USER_URL + "/signup?userName=" + this.state.username + "&password=" + this.state.password
+                + "&email=" + this.state.email;
+        axios.get(url)
+            .then((response) => {
+                if (response.data === "OK") {
+
+                    const location = {
+                        pathname: '/home',
+                        state: {
+                            username: this.state.username
+                        }
+                    };
+                    this.props.history.push(location);
+
+                } else {
+                    alert('Username already exists')
+                }
+            })
+            .catch(() => {
+                alert('Could not send request')
+            })
     };
 
     getEmail(e) {
